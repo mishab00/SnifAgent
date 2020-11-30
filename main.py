@@ -14,7 +14,7 @@ def start_sniffer(name):
 
         pkt = PacketObject(packet)
         pkt.print_ip_values()
-        #pkt.print_eth_values()
+        pkt.connect_to_db()
 
 
 

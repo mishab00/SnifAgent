@@ -60,4 +60,14 @@ class PacketObject:
         print('version', self.packet.ip.version)
 
     def connect_to_db(self):
-        cnx = mysql.connector.connect()
+        cnx = mysql.connector.connect(
+            host="localhost",
+            user="radware",
+            password="washington",
+            database="washington"
+        )
+        mycursor = mydb.cursor()
+        mycursor.execute("SHOW TABLES")
+
+        for x in mycursor:
+            print(x)
