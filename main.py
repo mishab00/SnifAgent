@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import pyshark
 from PacketObject import PacketObject
 
