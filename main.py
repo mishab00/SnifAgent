@@ -7,14 +7,14 @@ from PacketObject import PacketObject
 
 
 def start_sniffer(name):
-    capture = pyshark.LiveCapture(bpf_filter=name)
+    capture = pyshark.LiveCapture(interface='ens192',bpf_filter=name)
     capture.set_debug()
 
     for packet in capture.sniff_continuously():
 
         pkt = PacketObject(packet)
         pkt.print_ip_values()
-        pkt.print_eth_values()
+        #pkt.print_eth_values()
 
 
 
