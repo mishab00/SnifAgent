@@ -13,26 +13,26 @@ class PacketObject:
 # 'pretty_print', 'raw_mode', 'src', 'src_ig', 'src_lg', 'src_oui', 'src_oui_resolved', 'src_resolved', 'type'
     def print_eth_values(self):
         print('addr', self.packet.eth.addr)
-        print('addr_oui', self.packet.eth.addr_oui)
-        print('addr_oui_resolved', self.packet.eth.addr_oui_resolved)
-        print('addr_resolved', self.packet.eth.addr_resolved)
-        print('dst', self.packet.eth.dst)
-        print('dst_oui_resolved', self.packet.eth.dst_oui_resolved)
-        print('dst_resolved', self.packet.eth.dst_resolved)
-        print('field_names', self.packet.eth.field_names)
-        print('ig', self.packet.eth.ig)
-        print('layer_name', self.packet.eth.layer_name)
-        print('lg', self.packet.eth.lg)
-        print('src', self.packet.eth.src)
-        print('src_ig', self.packet.eth.src_ig)
-        print('addr_oui', self.packet.eth.addr_oui)
-        print('src_lg', self.packet.eth.src_lg)
-        print('src_oui', self.packet.eth.src_oui)
-        print('src', self.packet.eth.src)
-        print('src_ig', self.packet.eth.src_ig)
-        print('src_oui_resolved', self.packet.eth.addr_oui)
-        print('src_lg', self.packet.eth.src_lg)
-        print('src_oui', self.packet.eth.src_oui)
+        # print('addr_oui', self.packet.eth.addr_oui)
+        # print('addr_oui_resolved', self.packet.eth.addr_oui_resolved)
+        # print('addr_resolved', self.packet.eth.addr_resolved)
+        # print('dst', self.packet.eth.dst)
+        # print('dst_oui_resolved', self.packet.eth.dst_oui_resolved)
+        # print('dst_resolved', self.packet.eth.dst_resolved)
+        # print('field_names', self.packet.eth.field_names)
+        # print('ig', self.packet.eth.ig)
+        # print('layer_name', self.packet.eth.layer_name)
+        # print('lg', self.packet.eth.lg)
+        # print('src', self.packet.eth.src)
+        # print('src_ig', self.packet.eth.src_ig)
+        # print('addr_oui', self.packet.eth.addr_oui)
+        # print('src_lg', self.packet.eth.src_lg)
+        # print('src_oui', self.packet.eth.src_oui)
+        # print('src', self.packet.eth.src)
+        # print('src_ig', self.packet.eth.src_ig)
+        # print('src_oui_resolved', self.packet.eth.addr_oui)
+        # print('src_lg', self.packet.eth.src_lg)
+        # print('src_oui', self.packet.eth.src_oui)
 
     def print_ip_values(self):
         print('src', self.packet.ip.src)
@@ -60,14 +60,17 @@ class PacketObject:
         print('version', self.packet.ip.version)
 
     def connect_to_db(self):
-        cnx = mysql.connector.connect(
+        mydb = mysql.connector.connect(
             host="localhost",
             user="radware",
             password="washington",
             database="washington"
         )
         mycursor = mydb.cursor()
-        mycursor.execute("SHOW TABLES")
+        #mycursor.execute("SHOW TABLES")
+        sql = "INSERT INTO Agent (epoch, src_ip) VALUES (%s, %s)"
+        val = (self.packet.sniff_timestamp, self.packet.ip.src)
+        mycursor.execute(sql, val)
+        mydb.commit()
+        print(mycursor.rowcount, "record inserted.")
 
-        for x in mycursor:
-            print(x)
