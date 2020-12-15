@@ -13,8 +13,10 @@ def start_sniffer(name):
     for packet in capture.sniff_continuously():
 
         pkt = PacketObject(packet)
-        pkt.print_ip_values()
+        #pkt.print_ip_values()
         pkt.print_tcp_values()
+        pkt.print_http_response_values()
+        pkt.print_http_request_values()
         #pkt.connect_to_db()
 
 
