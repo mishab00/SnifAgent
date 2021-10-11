@@ -128,12 +128,17 @@ class PacketObject:
 
     def print_http_request_values(self):
         try:
+            print(dir(self.packet.http))
             print("****************Parse HTTP Request*************************")
+            for field in self.packet.http._get_all_field_lines():
+                print(field.strip())
+
+
             print("chat", self.packet.http.chat)
             # print("connection", self.packet.http.connection)
             print("get", self.packet.http.get)
-            print("get_field", self.packet.http.get_field)
-            print("get_field_by_showname", self.packet.http.get_field_by_showname)
+            print("get_field", self.packet.http.get_field('X-Amz-Cf-Id'))
+            print("get_field_by_showname", self.packet.http.get_field_by_showname('X-Amz-Cf-Id').show)
             print("get_field_value", self.packet.http.get_field_value)
             print("host", self.packet.http.host)
             print("layer_name", self.packet.http.layer_name)
@@ -145,10 +150,48 @@ class PacketObject:
             print("user_agent", self.packet.http.user_agent)
             print("request_number", self.packet.http.request_number)
             print("request_uri", self.packet.http.request_uri)
-            print("request_uri_path", self.packet.http.request_uri_path)
-            print("request_uri_query", self.packet.http.request_uri_query)
-            print("request_uri_query_parameter", self.packet.http.request_uri_query_parameter)
+            #print("request_uri_path", self.packet.http.request_uri_path)
+            #print("request_uri_query", self.packet.http.request_uri_query)
+            #print("request_uri_query_parameter", self.packet.http.request_uri_query_parameter)
             print("request_version", self.packet.http.request_version)
+
+
+
+        except AttributeError:
+            print("not http request")
+
+        finally:
+            print("****************END HTTP Request*************************")
+
+    def catch_http_request_values(self):
+        try:
+            print("****************Parse HTTP Request*************************")
+            with open("test.csv", "a") as myfile:
+
+                for field in self.packet.http._get_all_field_lines():
+                    #every header is split by colon where left part is a title and right is value i need left part
+                    if ':' in field and 'Expert Info' not in field and 'Severity level' not in field and 'Group' not in field:
+                        keyValue = field.split(':', 1)
+                        print(keyValue)
+                        key = keyValue[0]
+                        value = keyValue[1]
+                        if "Request Method" in key:
+                            myfile.write(value.strip() + ',')
+                        elif "Request URI" in key:
+
+                            myfile.write('num of path elements ' + str(len([v for v in value.strip().split("/") if v])) + ',')
+                            myfile.write(value.strip() + ',')
+                        elif "Full request URI" in key:
+                            pass
+                        elif "Request Version" in key:
+                            myfile.write(value.strip() + ',')
+                        elif "Prev request in frame" in key:
+                            pass
+                        elif "Request Version" in key:
+                            pass
+                        else:
+                            myfile.write(key.strip() + ',')
+                myfile.write("\n")
 
         except AttributeError:
             print("not http request")
